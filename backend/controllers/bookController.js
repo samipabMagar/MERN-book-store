@@ -21,25 +21,39 @@ export default class BookController {
   }
 
   // Get book by ID
-  async getBookById (req, res) {
-    const {id} = req.params;
-    if(id) {
+  async getBookById(req, res) {
+    const { id } = req.params;
+    if (id) {
       try {
         const book = await bookModel.findByPk(id);
-        console.log(book);
-        if(book) {
+        console.log(book.dataValues);
+        if (book) {
           res.status(200).json({ message: "Book found", book });
-        }
-        else {
+        } else {
           res.status(404).json({ message: "Book not found" });
         }
-      }
-      catch(error){
+      } catch (error) {
         console.error(error);
       }
-    }
-    else {
+    } else {
       res.status(400).json({ message: "Book ID is required" });
+    }
+  }
+
+  async updateBook(req, res) {
+    const { id } = req.params;
+    if (id) {
+      // console.log(req.body);
+      const data = await bookModel.update(req.body, {
+        where: { id },
+      });
+      if(data[0] === 1 ) {
+        res.status(200).json({message: "Book updated successfully" });
+      }else {
+        res.status(400).json({message: "Failed to update book"});
+      }
+    }else {
+      res.status(400).json({message: "Book ID is required" });
     }
   }
 }
