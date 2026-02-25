@@ -47,13 +47,34 @@ export default class BookController {
       const data = await bookModel.update(req.body, {
         where: { id },
       });
-      if(data[0] === 1 ) {
-        res.status(200).json({message: "Book updated successfully" });
-      }else {
-        res.status(400).json({message: "Failed to update book"});
+      if (data[0] === 1) {
+        res.status(200).json({ message: "Book updated successfully" });
+      } else {
+        res.status(400).json({ message: "Failed to update book" });
       }
-    }else {
-      res.status(400).json({message: "Book ID is required" });
+    } else {
+      res.status(400).json({ message: "Book ID is required" });
+    }
+  }
+
+  async deleteBook(req, res) {
+    const { id } = req.params;
+    if (id) {
+      try {
+        const data = await bookModel.destroy({
+          where: { id },
+        });
+        if (data === 1) {
+          res.status(200).json({ message: "Book deleted successfully" });
+        } else {
+          res.status(404).json({ message: "Book not found" });
+        }
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    } else {
+      res.status(400).json({ message: "Book ID is required" });
     }
   }
 }

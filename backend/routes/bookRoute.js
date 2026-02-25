@@ -11,4 +11,6 @@ router.post("/add", upload.single("image"), bookController.addBook);
 router.get("/:id", bookController.getBookById);
 
 router.put('/update/:id', bookController.updateBook);
+
+router.delete('/delete/:id', bookController.deleteBook);
 export default router;
