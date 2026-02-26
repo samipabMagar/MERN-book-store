@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import bookModel from "../models/bookModel.js";
 
 export default class BookController {
@@ -75,6 +76,34 @@ export default class BookController {
       }
     } else {
       res.status(400).json({ message: "Book ID is required" });
+    }
+  }
+
+  async searchBook(req, res) {
+    const { title } = req.query;
+    if (title) {
+      try {
+        const data = await bookModel.findAll({
+          where: {
+            [Op.or]: {
+              name: {
+                [Op.like]: `%${title}%`,
+              },
+              author: {
+                [Op.like]: `%${title}%`,
+              },
+            },
+          },
+        });
+
+        if (data.length > 0) {
+          res.status(200).json({ message: "Books found", data });
+        } else {
+          res.status(404).json({ message: "No books found" });
+        }
+      } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+      }
     }
   }
 }
