@@ -6,6 +6,8 @@ const router = express.Router();
 
 const bookController = new BookController();
 
+router.get("/", bookController.getBooks);
+
 router.post("/add", upload.single("image"), bookController.addBook);
 
 router.get("/:id", bookController.getBookById);

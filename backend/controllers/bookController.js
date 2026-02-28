@@ -106,4 +106,21 @@ export default class BookController {
       }
     }
   }
+
+  // Get all books
+  async getBooks(req, res) {
+    let { limit } = req.query;
+    if (!limit) limit = 10;
+    try {
+      const data = await bookModel.findAll({
+        limit: parseInt(limit),
+      });
+
+      if (data.length > 0) {
+        res.status(200).json({ message: "Books found", data });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
